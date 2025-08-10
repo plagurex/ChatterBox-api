@@ -1,1 +1,4 @@
-/main.db
+*.db
+/.vscode
+*.py
+*.md

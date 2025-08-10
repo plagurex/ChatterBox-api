@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"chatterbox/internal/app"
+	"chatterbox/internal/utils"
+	"log"
+)
 
 func main() {
-	fmt.Println("Hello, world!")
+	a := app.NewApp()
+	log.Fatal(a.Run(utils.LoadConfig("ss")))
 }
