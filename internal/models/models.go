@@ -1,5 +1,7 @@
 package models
 
+import "database/sql"
+
 type User struct {
 	Id       int
 	Username string
@@ -14,9 +16,10 @@ type Post struct {
 
 type Comment struct {
 	Id       int
-	PostId   int `db:"post_id"`
-	ParentId int `db:"paresnt_id"`
-	UserId   int `db:"user_id"`
+	PostId   int           `db:"post_id"`
+	ParentId sql.NullInt64 `db:"parent_id"`
+	UserId   int           `db:"user_id"`
+	Text     string
 }
 
 type Config struct {
