@@ -7,8 +7,19 @@ import (
 )
 
 func (a *App) GetAllPostsHandler(c *gin.Context) {
-	query := "SELECT * FROM Posts"
-	handleGetList[m.Post](a, c, query)
+	params := struct {
+		PerPage int `form:"per_page" binding:"omitempty,max=100,min=1"`
+		Page    int `form:"page" binding:"omitempty,min=0"`
+	}{
+		PerPage: 20,
+		Page:    0,
+	}
+	if err := c.ShouldBindQuery(&params); err != nil {
+		c.Error(err).SetType(gin.ErrorTypeBind)
+		return
+	}
+	query := "SELECT * FROM Posts LIMIT ? OFFSET ?"
+	handleGetList[m.Post](a, c, query, params.PerPage, params.Page*params.PerPage)
 }
 
 func (a *App) GetPostHandler(c *gin.Context) {
@@ -17,7 +28,7 @@ func (a *App) GetPostHandler(c *gin.Context) {
 }
 
 func (a *App) GetAllCommentsHandler(c *gin.Context) {
-	query := "SELECT * FROM Comments WHERE post_id = ? and parent_id IS NULL"
+	query := "SELECT * FROM Comments WHERE post_id = ?"
 	handleGetList[m.Comment](a, c, query, c.Param("post_id"))
 }
 

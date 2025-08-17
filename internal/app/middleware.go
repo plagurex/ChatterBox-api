@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func DBErrorMiddleware() gin.HandlerFunc {
+func ErrorMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
 
@@ -15,13 +15,16 @@ func DBErrorMiddleware() gin.HandlerFunc {
 		if len(errs) > 0 {
 			err := errs[0].Err
 
-			if errors.Is(err, sql.ErrNoRows) {
+			switch {
+			case errors.Is(err, sql.ErrNoRows):
 				c.JSON(404, gin.H{"error": "Not Found"})
 				c.Abort()
-				return
+			case errs[0].Type == gin.ErrorTypeBind:
+				c.JSON(400, gin.H{"error": "Bad Request", "message": err.Error()})
+				c.Abort()
+			default:
+				panic(err)
 			}
-
-			panic(err)
 		}
 	}
 }

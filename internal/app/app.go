@@ -29,7 +29,7 @@ func (a *App) Run(config models.Config) error {
 		return fmt.Errorf("DB connection failed: %w", err)
 	}
 
-	a.r.Use(DBErrorMiddleware())
+	a.r.Use(ErrorMiddleware())
 
 	a.r.GET("/posts", a.GetAllPostsHandler)
 	a.r.GET("/posts/:post_id", a.GetPostHandler)
