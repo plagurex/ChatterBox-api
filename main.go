@@ -8,5 +8,5 @@ import (
 
 func main() {
 	a := app.NewApp()
-	log.Fatal(a.Run(utils.LoadConfig("ss")))
+	log.Fatal(a.Run(utils.LoadConfig("config.json")))
 }

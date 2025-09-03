@@ -2,12 +2,21 @@ package utils
 
 import (
 	"chatterbox/internal/models"
+	"encoding/json"
+	"os"
 )
 
 func LoadConfig(path string) models.Config {
-	return models.Config{
-		IsDebugMode: true,
-		Addr:        "localhost:8080",
-		DbPath:      "main.db",
+	data, err := os.ReadFile(path)
+	if err != nil {
+		panic(err)
 	}
+
+	var config models.Config
+	err = json.Unmarshal(data, &config)
+	if err != nil {
+		panic(err)
+	}
+
+	return config
 }

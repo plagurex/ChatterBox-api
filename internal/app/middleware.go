@@ -23,7 +23,9 @@ func ErrorMiddleware() gin.HandlerFunc {
 				c.JSON(400, gin.H{"error": "Bad Request", "message": err.Error()})
 				c.Abort()
 			default:
-				panic(err)
+				c.JSON(501, gin.H{
+					"message": "Internal Server Error",
+				})
 			}
 		}
 	}
